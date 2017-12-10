@@ -1,0 +1,12 @@
+{
+  "require":
+  {
+    "twig/twig": "1.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Editor\\DB\\": "lib/DB",
+      "Editor\\Common\\": "lib/Common"
+    }
+  }
+}
