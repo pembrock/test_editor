@@ -35,7 +35,6 @@ class Authorization implements IAuthorization
             $result = $query->fetch(PDO::FETCH_ASSOC);
             if (!empty($result)) {
                 if ($result['sid'] == session_id()) {
-                    $this->updateLastActive($result['id']);
                     return true;
                 }
             }
@@ -48,7 +47,6 @@ class Authorization implements IAuthorization
             $additional_hash = Password::encode($result['id'] . self::HASH_VAL);
             $hash = Password::encode($result['password'] . $additional_hash);
             if ($hash == $_COOKIE['hash']) {
-                $this->updateLastActive($_COOKIE['uid']);
                 $sid = session_id();
                 $query = $this->db->prepare('UPDATE users SET sid = :sid WHERE id = :uid');
                 $query->bindParam(':sid', $sid);
