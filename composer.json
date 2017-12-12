@@ -6,7 +6,8 @@
   "autoload": {
     "psr-4": {
       "Editor\\DB\\": "lib/DB",
-      "Editor\\Common\\": "lib/Common"
+      "Editor\\Common\\": "lib/Common",
+      "Editor\\Admin\\": "admin/class"
     }
   }
 }

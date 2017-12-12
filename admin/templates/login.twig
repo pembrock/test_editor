@@ -8,17 +8,21 @@
 
 <body class="align">
 <div class="grid">
-    <form action="/" method="post" class="form login">
+    <form action="/admin/" method="post" class="form login">
+        <input type="hidden" name="login" value="1">
         <header class="login__header">
             <h3 class="login__title">Авторизация</h3>
+            {%  if data['error'] is defined %}
+                <p>{{ data['error'] }}</p>
+            {% endif %}
         </header>
 
         <div class="login__body">
             <div class="form__field">
-                <input type="email" placeholder="Email" required>
+                <input type="email" placeholder="Email" name="email" required>
             </div>
             <div class="form__field">
-                <input type="password" placeholder="Пароль" required>
+                <input type="password" placeholder="Пароль" name="password" required>
             </div>
         </div>
 

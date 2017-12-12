@@ -9,28 +9,25 @@
 namespace Editor\Common;
 
 use Editor\DB\DBConnect;
-use DateTime;
 use PDO;
 
 
-class Authorization implements IAuthorization
+class Authorization extends AbstractAuthorization
 {
     const HASH_VAL = 4969;
     private $login;
     private $password;
     private $db;
 
-    function __construct($login, $password)
+    function __construct()
     {
         $this->db = DBConnect::instance()->getConnection();
-        $this->login = $login;
-        $this->password = $password;
     }
 
     public function checkAuth()
     {
         if (isset($_SESSION['user_login'])) {
-            $query = $this->db->prepare('SELECT id, sid, last_active FROM users WHERE email = :session_login');
+            $query = $this->db->prepare('SELECT id, sid FROM users WHERE email = :session_login');
             $query->execute(array(':session_login' => $_SESSION['user_login']));
             $result = $query->fetch(PDO::FETCH_ASSOC);
             if (!empty($result)) {
@@ -41,7 +38,7 @@ class Authorization implements IAuthorization
         }
 
         if (isset($_COOKIE['uid']) && isset($_COOKIE['hash'])) {
-            $query = $this->db->prepare('SELECT id, password FROM users WHERE id = :id');
+            $query = $this->db->prepare('SELECT id, pass FROM users WHERE id = :id');
             $query->execute(array(':id' => $_COOKIE['uid']));
             $result = $query->fetch(PDO::FETCH_ASSOC);
             $additional_hash = Password::encode($result['id'] . self::HASH_VAL);
@@ -59,21 +56,22 @@ class Authorization implements IAuthorization
         return false;
     }
 
-    public function doAuth()
+    public function doAuth($login, $password)
     {
+        $this->login = $login;
+        $this->password = $password;
         if (isset($_SESSION['user_login'])) {
             unset($_SESSION['user_login']);
         }
-        $query = $this->db->prepare('SELECT id FROM users WHERE email = :login and password = :password');
+        $query = $this->db->prepare('SELECT id FROM users WHERE email = :login and pass = :password');
         $query->execute(array(':login' => $this->login, ':password' => Password::encode($this->password)));
         $result = $query->fetch(PDO::FETCH_ASSOC);
+
         if (!empty($result)) {
             $_SESSION['user_login'] = $this->login;
             $sid = session_id();
-            $cur_date = new DateTime();
-            $query = $this->db->prepare('UPDATE users SET sid = :sid, last_active = :last_active WHERE id = :uid');
+            $query = $this->db->prepare('UPDATE users SET sid = :sid WHERE id = :uid');
             $query->bindParam(':sid', $sid);
-            $query->bindParam(':last_active', $cur_date->format('Y-m-d H:i:s'));
             $query->bindParam(':uid', $result['id']);
             $query->execute();
             $this->saveSession($result['id']);
@@ -82,7 +80,7 @@ class Authorization implements IAuthorization
         return false;
     }
 
-    public function saveSession($uid)
+    private function saveSession($uid)
     {
         $password_hash = Password::encode($this->password);
         $additional_hash = Password::encode($uid . self::HASH_VAL);

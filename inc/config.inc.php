@@ -5,7 +5,7 @@
  * Date: 11.12.17
  * Time: 22:19
  */
-
+session_start();
 require_once __DIR__ . "/../vendor/autoload.php";
 
 $loader = new Twig_Loader_Filesystem(__DIR__ . '/../templates');

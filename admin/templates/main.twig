@@ -1,0 +1,32 @@
+{% extends "index.twig" %}
+{% block content %}
+    <div class="bs-example4" page-example-id="contextual-table">
+        <form name="search" action="" method="get">
+            <input type="input" placeholder="Поиск" name="s"> <input type="submit" value="Искать">
+        </form>
+        <a href="/admin/?view=pages&act=edit&id=0">Добавить</a>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Название</th>
+                <th>Заголовок</th>
+                <th>Дата создания</th>
+                <th>Действие</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for page in data.pages %}
+            <tr class="active">
+                <td>{{ page.title }}</td>
+                <td>{{ page.header }}</td>
+                <td>{{ page.date_create }}</td>
+                <td>
+                    <a href="/admin/?view=pages&act=edit&id={{ page.id }}">Редактировать</a>
+                    <a href="/admin/?view=pages&act=del&id={{ page.id }}">Удалить</a>
+                </td>
+            </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

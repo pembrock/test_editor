@@ -6,11 +6,20 @@
  * Date: 10.12.17
  * Time: 19:12
  */
+
+namespace Editor\Admin;
+
 interface IPage
 {
-    public function create();
+    public function getPage($id);
 
-    public function update();
+    public function searchPage($query);
 
-    public function list();
+    public function create($fields);
+
+    public function update($fields);
+
+    public function delete($id);
+
+    public function pagesList();
 }

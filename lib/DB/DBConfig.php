@@ -13,7 +13,7 @@ class DBConfig
 {
     protected static $user = 'root';
     protected static $pass = '';
-    protected static $host = 'mysql:host=localhost;dbname=test';
+    protected static $host = 'mysql:host=localhost;dbname=editor';
 
     /**
      * @return string
